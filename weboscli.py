@@ -16,12 +16,17 @@ def main():
         settings = load_settings()
         client = WebOSClient(settings["host"])
         client.connect()
-        register_device(client, settings)
+        register_device(client, settings, notify)
+
         do_action(client)
     except Exception as e:
         logging.error(f"An error occurred: {e}")
     finally:
         client.close()
+
+
+def notify(message):
+    print(message)
 
 
 def do_action(client):
@@ -31,14 +36,14 @@ def do_action(client):
     )  # Show a notification message on the TV.
 
 
-def register_device(client, settings):
+def register_device(client, settings, callback):
     save = False
     for status in client.register(settings):
         if status == WebOSClient.PROMPTED:
-            print("Please accept the connect on the TV!")
+            callback("Please accept the connect on the TV!")
             save = True
         elif status == WebOSClient.REGISTERED:
-            print("Registration successful!")
+            callback("Registration successful!")
 
     if "host" not in settings:
         settings["host"] = client.host
