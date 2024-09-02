@@ -1,7 +1,11 @@
+import logging
 import json
 import keyring
 from pywebostv.connection import WebOSClient
 from pywebostv.controls import SystemControl
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
 
 # the service is just a namespace for your app
 service_id = "LGWebOSTV"  # TODO: make this configurable
@@ -14,6 +18,8 @@ def main():
         client.connect()
         register_device(client, settings)
         do_action(client)
+    except Exception as e:
+        logging.error(f"An error occurred: {e}")
     finally:
         client.close()
 
