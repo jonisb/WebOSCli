@@ -1,6 +1,7 @@
 import json
 import keyring
 from pywebostv.connection import WebOSClient
+from pywebostv.controls import SystemControl
 
 # the service is just a namespace for your app
 service_id = "LGWebOSTV"  # TODO: make this configurable
@@ -12,8 +13,16 @@ def main():
         client = WebOSClient(settings["host"])
         client.connect()
         register_device(client, settings)
+        do_action(client)
     finally:
         client.close()
+
+
+def do_action(client):
+    system = SystemControl(client)
+    system.notify(
+        "This is a notification message!"
+    )  # Show a notification message on the TV.
 
 
 def register_device(client, settings):
