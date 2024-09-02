@@ -1,4 +1,5 @@
 import json
+import keyring
 
 
 def main():
@@ -10,7 +11,11 @@ def load_settings():
         with open("settings.json", "r") as f:
             settings = json.load(f)
     except FileNotFoundError:
-        settings = {}
+        # the service is just a namespace for your app
+        service_id = "LGWebOSTV"  # TODO: make this configurable
+        settings = {"service_id": service_id}
+
+    settings["client_key"] = keyring.get_password(settings["service_id"], "client_key")
 
     return settings
 
