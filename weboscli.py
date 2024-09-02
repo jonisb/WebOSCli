@@ -17,12 +17,19 @@ def main():
 
 
 def register_device(client, settings):
+    save = False
     for status in client.register(settings):
-        if status == WebOSClient.REGISTERED:
+        if status == WebOSClient.PROMPTED:
+            print("Please accept the connect on the TV!")
+            save = True
+        elif status == WebOSClient.REGISTERED:
             print("Registration successful!")
 
     if "host" not in settings:
         settings["host"] = client.host
+        save = True
+
+    if save:
         save_settings(settings)
 
 
