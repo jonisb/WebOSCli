@@ -1,5 +1,6 @@
 import json
 import keyring
+from pywebostv.connection import WebOSClient
 
 # the service is just a namespace for your app
 service_id = "LGWebOSTV"  # TODO: make this configurable
@@ -7,6 +8,8 @@ service_id = "LGWebOSTV"  # TODO: make this configurable
 
 def main():
     settings = load_settings()
+    client = WebOSClient(settings["host"])
+    client.connect()
 
     save_settings(settings)
 
