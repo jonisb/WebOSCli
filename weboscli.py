@@ -7,11 +7,14 @@ service_id = "LGWebOSTV"  # TODO: make this configurable
 
 
 def main():
-    settings = load_settings()
-    client = WebOSClient(settings["host"])
-    client.connect()
+    try:
+        settings = load_settings()
+        client = WebOSClient(settings["host"])
+        client.connect()
 
-    save_settings(settings)
+        save_settings(settings)
+    finally:
+        client.close()
 
 
 def save_settings(settings):
