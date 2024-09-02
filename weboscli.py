@@ -2,8 +2,7 @@ import logging
 import argparse
 import json
 import keyring
-from pywebostv.connection import WebOSClient
-from pywebostv.controls import SystemControl
+from weboslib import WebOSClass
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -12,10 +11,10 @@ logging.basicConfig(level=logging.INFO)
 def main(service_id):
     try:
         settings = load_settings(service_id)
-        client = WebOSClient(settings["host"])
-        client.connect()
-        register_device(client, settings, notify, service_id)
-        do_action(client)
+        client = WebOSClass(settings, service_id, notify)
+        if client.save:
+            save_settings(settings, service_id)
+        client.do_action()
     except Exception as e:
         logging.error(f"An error occurred: {e}")
     finally:
@@ -24,30 +23,6 @@ def main(service_id):
 
 def notify(message):
     print(message)
-
-
-def do_action(client):
-    system = SystemControl(client)
-    system.notify(
-        "This is a notification message!"
-    )  # Show a notification message on the TV.
-
-
-def register_device(client, settings, callback, service_id):
-    save = False
-    for status in client.register(settings):
-        if status == WebOSClient.PROMPTED:
-            callback("Please accept the connect on the TV!")
-            save = True
-        elif status == WebOSClient.REGISTERED:
-            callback("Registration successful!")
-
-    if "host" not in settings:
-        settings["host"] = client.host
-        save = True
-
-    if save:
-        save_settings(settings, service_id)
 
 
 def save_settings(settings, service_id):
