@@ -11,10 +11,19 @@ def main():
         settings = load_settings()
         client = WebOSClient(settings["host"])
         client.connect()
-
-        save_settings(settings)
+        register_device(client, settings)
     finally:
         client.close()
+
+
+def register_device(client, settings):
+    for status in client.register(settings):
+        if status == WebOSClient.REGISTERED:
+            print("Registration successful!")
+
+    if "host" not in settings:
+        settings["host"] = client.host
+        save_settings(settings)
 
 
 def save_settings(settings):
