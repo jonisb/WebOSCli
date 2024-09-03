@@ -1,7 +1,7 @@
 import logging
 from typing import Dict, Callable, Optional
 from pywebostv.connection import WebOSClient
-from pywebostv.controls import SystemControl
+from pywebostv.controls import SystemControl, MediaControl, ApplicationControl
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -30,6 +30,9 @@ class WebOSClass(object):
         self.save = False
         self.client: Optional[WebOSClient] = None
         self._system: Optional[SystemControl] = None
+        self._media: Optional[MediaControl] = None
+        self._application: Optional[ApplicationControl] = None
+
         try:
             self.client = WebOSClient(settings["host"])
             self.client.connect()
@@ -73,3 +76,15 @@ class WebOSClass(object):
         if not self._system:
             self._system = SystemControl(self.client)
         return self._system
+
+    @property
+    def media(self) -> MediaControl:
+        if not self._media:
+            self._media = MediaControl(self.client)
+        return self._media
+
+    @property
+    def application(self) -> ApplicationControl:
+        if not self._app:
+            self._application = ApplicationControl(self.client)
+        return self._application
