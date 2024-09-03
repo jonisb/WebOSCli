@@ -9,16 +9,15 @@ logging.basicConfig(level=logging.INFO)
 
 
 def main(service_id):
+    settings = load_settings(service_id)
     try:
-        settings = load_settings(service_id)
-        client = WebOSClass(settings, service_id, notify)
-        if client.save:
-            save_settings(settings, service_id)
-        client.do_action()
+        with WebOSClass(settings, service_id, notify) as tv:
+            if tv.is_connected():
+                if tv.save:
+                    save_settings(settings, service_id)
+                tv.do_action()
     except WebOSError as e:
         logging.error(f"WebOS operation failed: {e}")
-    finally:
-        client.close()
 
 
 def notify(message):

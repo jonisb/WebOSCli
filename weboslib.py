@@ -46,3 +46,13 @@ class WebOSClass(object):
 
     def close(self):
         self.client.close()
+
+    def is_connected(self) -> bool:
+        """Check if the client is connected to the TV."""
+        return self.client is not None and self.client.connection is not None
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.close()
