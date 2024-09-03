@@ -38,12 +38,6 @@ class WebOSClass(object):
             logging.error(f"Failed to initialize WebOS client: {e}")
             raise WebOSError(f"Failed to initialize WebOS client: {e}")
 
-    def do_action(self):
-        system = SystemControl(self.client)
-        system.notify(
-            "This is a notification message!"
-        )  # Show a notification message on the TV.
-
     def register_device(self) -> None:
         """Register the device with the TV."""
         for status in self.client.register(self.settings):
