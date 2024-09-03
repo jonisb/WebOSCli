@@ -17,6 +17,13 @@ class WebOSClass(object):
     def __init__(
         self, settings: Dict[str, str], service_id: str, callback: Callable[[str], None]
     ):
+        """
+        Initialize the WebOS client.
+
+        :param settings: Dictionary containing connection settings
+        :param service_id: Unique identifier for the service
+        :param callback: Function to call for status updates
+        """
         self.settings = settings
         self.service_id = service_id
         self.callback = callback
@@ -38,6 +45,7 @@ class WebOSClass(object):
         )  # Show a notification message on the TV.
 
     def register_device(self) -> None:
+        """Register the device with the TV."""
         for status in self.client.register(self.settings):
             if status == WebOSClient.PROMPTED:
                 self.callback("Please accept the connect on the TV!")
@@ -50,6 +58,7 @@ class WebOSClass(object):
             self.save = True
 
     def close(self) -> None:
+        """Close the connection to the TV."""
         if self.client:
             self.client.close()
 
