@@ -49,7 +49,7 @@ class WebOSClass(object):
         for status in self.client.register(self.settings):
             if status == WebOSClient.PROMPTED:
                 logging.info("Please accept the connection on the TV!")
-                self.callback("Please accept the connect on the TV!")
+                self.callback("Please accept the connection on the TV!")
                 self.save = True
             elif status == WebOSClient.REGISTERED:
                 logging.info("Registration successful!")
