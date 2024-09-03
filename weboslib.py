@@ -18,6 +18,7 @@ class WebOSClass(object):
         self.service_id = service_id
         self.callback = callback
         self.save = False
+        self._system = None
         try:
             self.client = WebOSClient(settings["host"])
             self.client.connect()
@@ -56,3 +57,9 @@ class WebOSClass(object):
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.close()
+
+    @property
+    def system(self) -> SystemControl:
+        if not self._system:
+            self._system = SystemControl(self.client)
+        return self._system

@@ -15,7 +15,7 @@ def main(service_id):
             if tv.is_connected():
                 if tv.save:
                     save_settings(settings, service_id)
-                tv.do_action()
+                tv.system.notify("Hello from WebOSCLI!")
     except WebOSError as e:
         logging.error(f"WebOS operation failed: {e}")
 
