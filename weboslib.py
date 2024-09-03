@@ -1,4 +1,5 @@
 import logging
+from typing import Dict, Callable, Optional
 from pywebostv.connection import WebOSClient
 from pywebostv.controls import SystemControl
 
@@ -13,12 +14,15 @@ class WebOSError(Exception):
 
 
 class WebOSClass(object):
-    def __init__(self, settings, service_id, callback):
+    def __init__(
+        self, settings: Dict[str, str], service_id: str, callback: Callable[[str], None]
+    ):
         self.settings = settings
         self.service_id = service_id
         self.callback = callback
         self.save = False
-        self._system = None
+        self.client: Optional[WebOSClient] = None
+        self._system: Optional[SystemControl] = None
         try:
             self.client = WebOSClient(settings["host"])
             self.client.connect()
@@ -33,7 +37,7 @@ class WebOSClass(object):
             "This is a notification message!"
         )  # Show a notification message on the TV.
 
-    def register_device(self):
+    def register_device(self) -> None:
         for status in self.client.register(self.settings):
             if status == WebOSClient.PROMPTED:
                 self.callback("Please accept the connect on the TV!")
@@ -45,8 +49,9 @@ class WebOSClass(object):
             self.settings["host"] = self.client.host
             self.save = True
 
-    def close(self):
-        self.client.close()
+    def close(self) -> None:
+        if self.client:
+            self.client.close()
 
     def is_connected(self) -> bool:
         """Check if the client is connected to the TV."""
