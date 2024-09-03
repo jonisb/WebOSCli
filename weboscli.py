@@ -2,7 +2,7 @@ import logging
 import argparse
 import json
 import keyring
-from weboslib import WebOSClass
+from weboslib import WebOSClass, WebOSError
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -15,8 +15,8 @@ def main(service_id):
         if client.save:
             save_settings(settings, service_id)
         client.do_action()
-    except Exception as e:
-        logging.error(f"An error occurred: {e}")
+    except WebOSError as e:
+        logging.error(f"WebOS operation failed: {e}")
     finally:
         client.close()
 
